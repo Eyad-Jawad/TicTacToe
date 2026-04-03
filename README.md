@@ -2,7 +2,7 @@
 This is a game that has an Ai as an oponent agaisnt you!  
 It is implmeneted with basic JavaScript, I used the Pyhton code as a base to make it    
 
-You can find it hosted on [this website](https://github.com/Eyad-Jawad-github.io/TicTacToe/)!
+You can find it hosted on [this website](https://github.com/eyad-jawad.github.io/TicTacToe/)!
 ![Game Screenshot](https://github.com/Eyad-Jawad/Eyad-Jawad.github.io/blob/main/tictactoescreenshot.png)    
 
 ### What Have I Learned
