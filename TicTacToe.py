@@ -4,28 +4,28 @@ class Players:
         self.ai: str = AI
         self.player: str = player
 
-    def checkWin(self, player: str, board: list[list[str | None]]) -> bool:
+    def checkWin(self, player: str, board: list[str | None]) -> bool:
         for i in range(3):
-            if all([board[i][j] == player for j in range(3)]): return True # horizontal positions
-            if all([board[j][i] == player for j in range(3)]): return True # vertical positions
-        if all([board[i][i]     == player for i in range(3)]): return True # diagonal from left positions
-        if all([board[i][2 - i] == player for i in range(3)]): return True # diagonal from right positions
+            if all([board[i * 3 + j] == player for j in range(3)]): return True # horizontal positions
+            if all([board[j * 3 + i] == player for j in range(3)]): return True # vertical positions
+        if all([board[i * 3 + i]     == player for i in range(3)]): return True # diagonal from left positions
+        if all([board[i * 3 + 2 - i] == player for i in range(3)]): return True # diagonal from right positions
         
         return False
     
-    def checkTie(self, board: list[list[str | None]]) -> bool:
+    def checkTie(self, board: list[str | None]) -> bool:
         for i in range(3):
             for j in range(3):
-                if not board[i][j]: return False
+                if not board[i * 3 + j]: return False
         return True
     
     # TODO: I dont like how this works
-    def getAvailableMoves(self, board: list[list[str | None]]) -> list[tuple[int, int]]:
+    def getAvailableMoves(self, board: list[str | None]) -> list[int]:
         availableMoves = []
         for i in range(3):
             for j in range(3):
-                if not board[i][j]:
-                    availableMoves.append((i, j))
+                if not board[i * 3 + j]:
+                    availableMoves.append(i * 3 + j)
         return availableMoves
 
 
@@ -34,23 +34,23 @@ class Ai(Players):
         super().__init__(AI, player)
         self.turn: str = player
 
-    def aiPlay(self, board: list[list[str | None]]) -> tuple[int, int]:
+    def aiPlay(self, board: list[str | None]) -> int:
         availableMoves = self.getAvailableMoves(board)
 
         bestScore = float('-inf')
         bestMove = None
         
         for move in availableMoves:
-            board[move[0]][move[1]] = self.ai
+            board[move] = self.ai
             score = self.minmax(0, board)
             if score > bestScore:
                 bestScore = score
-                bestMove = (move[0], move[1])
-            board[move[0]][move[1]] = None
+                bestMove = move
+            board[move] = None
 
         return bestMove
 
-    def minmax(self, depth, board: list[list[str | None]]) -> int | float:
+    def minmax(self, depth, board: list[str | None]) -> int | float:
         if self.checkWin(self.player, board):
             return depth - 10
         elif self.checkWin(self.ai, board):
@@ -61,7 +61,7 @@ class Ai(Players):
         best = float('-inf') if self.turn == self.ai else float('inf')
 
         for move in self.getAvailableMoves(board):
-            board[move[0]][move[1]] = self.turn
+            board[move] = self.turn
             
             if self.turn == self.ai:
                 self.turn = self.player
@@ -72,15 +72,15 @@ class Ai(Players):
                 best = min(best, self.minmax(depth + 1, board))
                 self.turn = self.player
             
-            board[move[0]][move[1]] = None
+            board[move] = None
 
         return best
     
-def printBoard(board: list[list[str | None]]) -> None:
+def printBoard(board: list[str | None]) -> None:
     print(f"{"=" * 50}")
     for i in range(3):
         for j in range(3):
-            if board[i][j]: print(f" {board[i][j]} ", end="")
+            if board[i * 3 + j]: print(f" {board[i * 3 + j]} ", end="")
             else: print(f" {i * 3 + j + 1} ", end="")
             print("|", end="")
 
@@ -89,20 +89,17 @@ def printBoard(board: list[list[str | None]]) -> None:
         else:
             print()
 
-def getMove(board: list[list[str | None]]) -> tuple[int, int]:
+def getMove(board: list[str | None]) -> int:
     while True:
         try:
             move = int(input("Choose a square: ")) - 1
 
             if not (0 <= move <= 8):
                 raise ValueError
-            
-            i = move // 3
-            j = move %  3
 
-            if board[i][j]: raise ValueError
+            if board[move]: raise ValueError
 
-            return (i, j)
+            return move
 
         except ValueError:
             printBoard(board)
@@ -125,9 +122,9 @@ def main():
     aiChar     = "X" if playerChar == "O" else "O"
 
     player = Players(aiChar, playerChar)
-    ai = Ai(aiChar, playerChar)
+    ai     = Ai(aiChar, playerChar)
 
-    board = [[None for _ in range(3)] for _ in range(3)]
+    board = [None for _ in range(9)]
 
     for i in range(6):
         printBoard(board)
@@ -143,11 +140,11 @@ def main():
             break
 
         playerMove = getMove(board)
-        board[playerMove[0]][playerMove[1]] = player.player
+        board[playerMove] = player.player
 
         if i == 4: continue
 
         aiMove = ai.aiPlay(board)
-        board[aiMove[0]][aiMove[1]] = ai.ai
+        board[aiMove] = ai.ai
 
 main()
