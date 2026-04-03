@@ -124,6 +124,7 @@ class Game {
             div.addEventListener("click", () => {
                 if (this.checkWin("X") || this.checkWin("O") || this.checkTie()) {
                     this.printBoard(ai);
+                    this.checkEndGame(ai);
                     return;
                 }
 
@@ -150,6 +151,12 @@ class Game {
                 }
                 if (move !== undefined) {
                     this.board[move] = "O";
+                }
+
+                if (this.checkWin("X") || this.checkWin("O") || this.checkTie()) {
+                    this.printBoard(ai);
+                    this.checkEndGame(ai);
+                    return;
                 }
 
                 this.printBoard(ai);
