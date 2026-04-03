@@ -86,16 +86,16 @@ class Game {
 
     checkEndGame(ai) {
         if (this.checkWin("O")) {
-            alert("You lost.");
             this.printBoard(ai);
+            alert("You lost.");
             return;
         } else if (this.checkWin("X")) {
-            alert("You won!");
             this.printBoard(ai);
+            alert("You won!");
             return;
         } else if (this.checkTie()) {
-            alert("Tie.");
             this.printBoard(ai);
+            alert("Tie.");
             return;
         }
     }
@@ -127,15 +127,13 @@ class Game {
                     return;
                 }
 
-                this.checkEndGame(ai);
-
                 if (this.board[i] !== null) return;
 
                 this.board[i] = "X";
 
-                this.checkEndGame(ai);
                 if (this.checkWin("X") || this.checkWin("O") || this.checkTie()) {
                     this.printBoard(ai);
+                    this.checkEndGame(ai);
                     return;
                 }
 
@@ -153,8 +151,6 @@ class Game {
                 if (move !== undefined) {
                     this.board[move] = "O";
                 }
-
-                this.checkEndGame(ai);
 
                 this.printBoard(ai);
             });
