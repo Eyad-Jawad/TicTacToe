@@ -6,18 +6,13 @@ class Ai:
 
     # TODO: I dont like how this works
     def getAvailableMoves(self, board: list[str | None]) -> list[int]:
-        availableMoves = []
-        for i in range(3):
-            for j in range(3):
-                if not board[i * 3 + j]:
-                    availableMoves.append(i * 3 + j)
-        return availableMoves
+        return [i for i in range(9) if not board[i]]
 
     def aiPlay(self, board: list[str | None]) -> int:
         availableMoves = self.getAvailableMoves(board)
 
         bestScore = float('-inf')
-        bestMove = None
+        bestMove = availableMoves[0]
         
         for move in availableMoves:
             board[move] = self.ai
@@ -43,9 +38,9 @@ class Ai:
             board[move] = turn
             
             if turn == self.ai:
-                best = max(best, self.minmax(depth + 1, board, self.ai))
+                best = max(best, self.minmax(depth + 1, board, self.player))
             else:
-                best = min(best, self.minmax(depth + 1, board, self.player))
+                best = min(best, self.minmax(depth + 1, board, self.ai))
             
             board[move] = None
 
@@ -61,10 +56,7 @@ def checkWin(player: str, board: list[str | None]) -> bool:
     return False
 
 def checkTie(board: list[str | None]) -> bool:
-    for i in range(3):
-        for j in range(3):
-            if not board[i * 3 + j]: return False
-    return True
+    return all(board[i] for i in range(9))
     
 def printBoard(board: list[str | None]) -> None:
     print(f"{"=" * 50}")

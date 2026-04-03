@@ -1,0 +1,20 @@
+#game {
+    height: 61vh;
+    width: 61vw;
+    border: 2px solid black;
+    border-radius: 5px;
+    border-color: black;
+}
+
+.square {
+    border: 1px solid black;
+    display: inline-block;
+    height: 20vh;
+    width: 20vw;
+    font-size: 2rem;
+    text-align: center;
+}
+
+hr {
+    margin: 0;
+}
