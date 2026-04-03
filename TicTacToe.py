@@ -3,7 +3,6 @@ class Ai:
     def __init__(self, AI: str, player: str) -> None:
         self.ai: str = AI
         self.player: str = player
-        self.turn: str = player
 
     # TODO: I dont like how this works
     def getAvailableMoves(self, board: list[str | None]) -> list[int]:
@@ -22,7 +21,7 @@ class Ai:
         
         for move in availableMoves:
             board[move] = self.ai
-            score = self.minmax(0, board)
+            score = self.minmax(0, board, self.player)
             if score > bestScore:
                 bestScore = score
                 bestMove = move
@@ -30,7 +29,7 @@ class Ai:
 
         return bestMove
 
-    def minmax(self, depth, board: list[str | None]) -> int | float:
+    def minmax(self, depth: int, board: list[str | None], turn: str) -> int | float:
         if checkWin(self.player, board):
             return depth - 10
         elif checkWin(self.ai, board):
@@ -38,19 +37,15 @@ class Ai:
         elif checkTie(board):
             return 0
         
-        best = float('-inf') if self.turn == self.ai else float('inf')
+        best = float('-inf') if turn == self.ai else float('inf')
 
         for move in self.getAvailableMoves(board):
-            board[move] = self.turn
+            board[move] = turn
             
-            if self.turn == self.ai:
-                self.turn = self.player
-                best = max(best, self.minmax(depth + 1, board))
-                self.turn = self.ai
+            if turn == self.ai:
+                best = max(best, self.minmax(depth + 1, board, self.ai))
             else:
-                self.turn = self.ai
-                best = min(best, self.minmax(depth + 1, board))
-                self.turn = self.player
+                best = min(best, self.minmax(depth + 1, board, self.player))
             
             board[move] = None
 
