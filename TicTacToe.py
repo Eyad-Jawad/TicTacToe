@@ -1,24 +1,10 @@
 #XOproject: VERY Updated
-class Players:
+class Ai:
     def __init__(self, AI: str, player: str) -> None:
         self.ai: str = AI
         self.player: str = player
+        self.turn: str = player
 
-    def checkWin(self, player: str, board: list[str | None]) -> bool:
-        for i in range(3):
-            if all([board[i * 3 + j] == player for j in range(3)]): return True # horizontal positions
-            if all([board[j * 3 + i] == player for j in range(3)]): return True # vertical positions
-        if all([board[i * 3 + i]     == player for i in range(3)]): return True # diagonal from left positions
-        if all([board[i * 3 + 2 - i] == player for i in range(3)]): return True # diagonal from right positions
-        
-        return False
-    
-    def checkTie(self, board: list[str | None]) -> bool:
-        for i in range(3):
-            for j in range(3):
-                if not board[i * 3 + j]: return False
-        return True
-    
     # TODO: I dont like how this works
     def getAvailableMoves(self, board: list[str | None]) -> list[int]:
         availableMoves = []
@@ -27,12 +13,6 @@ class Players:
                 if not board[i * 3 + j]:
                     availableMoves.append(i * 3 + j)
         return availableMoves
-
-
-class Ai(Players):
-    def __init__(self, AI, player):
-        super().__init__(AI, player)
-        self.turn: str = player
 
     def aiPlay(self, board: list[str | None]) -> int:
         availableMoves = self.getAvailableMoves(board)
@@ -51,11 +31,11 @@ class Ai(Players):
         return bestMove
 
     def minmax(self, depth, board: list[str | None]) -> int | float:
-        if self.checkWin(self.player, board):
+        if checkWin(self.player, board):
             return depth - 10
-        elif self.checkWin(self.ai, board):
+        elif checkWin(self.ai, board):
             return 10 - depth
-        elif self.checkTie(board):
+        elif checkTie(board):
             return 0
         
         best = float('-inf') if self.turn == self.ai else float('inf')
@@ -75,6 +55,21 @@ class Ai(Players):
             board[move] = None
 
         return best
+    
+def checkWin(player: str, board: list[str | None]) -> bool:
+    for i in range(3):
+        if all([board[i * 3 + j] == player for j in range(3)]): return True # horizontal positions
+        if all([board[j * 3 + i] == player for j in range(3)]): return True # vertical positions
+    if all([board[i * 3 + i]     == player for i in range(3)]): return True # diagonal from left positions
+    if all([board[i * 3 + 2 - i] == player for i in range(3)]): return True # diagonal from right positions
+    
+    return False
+
+def checkTie(board: list[str | None]) -> bool:
+    for i in range(3):
+        for j in range(3):
+            if not board[i * 3 + j]: return False
+    return True
     
 def printBoard(board: list[str | None]) -> None:
     print(f"{"=" * 50}")
@@ -121,30 +116,30 @@ def main():
     playerChar = getChar()
     aiChar     = "X" if playerChar == "O" else "O"
 
-    player = Players(aiChar, playerChar)
-    ai     = Ai(aiChar, playerChar)
+    ai = Ai(aiChar, playerChar)
 
     board = [None for _ in range(9)]
 
     for i in range(6):
         printBoard(board)
 
-        if player.checkWin(player.player, board):
+        if checkWin(playerChar, board):
             print("You Won!")
             break
-        elif ai.checkWin(ai.ai, board):
+        elif checkWin(aiChar, board):
             print("You lost.")
             break
-        elif player.checkTie(board):
+        elif checkTie(board):
             print("Tie.")
             break
 
         playerMove = getMove(board)
-        board[playerMove] = player.player
+        board[playerMove] = playerChar
 
         if i == 4: continue
 
         aiMove = ai.aiPlay(board)
-        board[aiMove] = ai.ai
+        board[aiMove] = aiChar
+        print(f"The Ai chose square {aiMove}")
 
 main()
