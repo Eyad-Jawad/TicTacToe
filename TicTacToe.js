@@ -104,18 +104,15 @@ class Game {
         const gameBox = document.getElementById("game");
         gameBox.innerHTML = "";
         for (let i = 0; i < 9; i++) {
-    
-                let div = document.createElement("div");
-                div.classList.add("square");
+            let div = document.createElement("div");
+            div.classList.add("square");
 
-                if (this.board[i]) {
-                    div.textContent = this.board[i];
-                } else {
-                    div.textContent = i + 1;
-                }
-    
-                gameBox.appendChild(div);
-    
+            if (this.board[i]) {
+                div.textContent = this.board[i];
+            } 
+
+            gameBox.appendChild(div);
+
             if (i % 3 === 2 && i < 6) {
                 let hr = document.createElement("hr");
                 gameBox.appendChild(hr);
