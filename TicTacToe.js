@@ -4,14 +4,18 @@ class Ai {
         this.player = player;
         this.game = game;
     }
-
     getAvailableMoves(board) {
+        if (!Array.isArray(board) || board.length !== 9) {
+            throw new Error("Invalid board");
+        }
+
         let availableMoves = [];
         for (let i = 0; i < 9; i++) {
-            if (!(board[i])) {
+            if (board[i] === null) {
                 availableMoves.push(i);
             }
         }
+
         return availableMoves;
     }
 
