@@ -102,6 +102,13 @@ class Game {
             alert("Tie.");
             return;
         }
+
+    }
+    
+    validateBoard() {
+        if (!Array.isArray(this.board) || this.board.length !== 9) {
+            throw new Error("Invalid board");
+        }
     }
     
     printBoard(ai) {    
@@ -139,7 +146,7 @@ class Game {
                     return;
                 }
 
-                let move;
+                let move; 
 
                 if (randInt(1, 3) !== 2) {
                     move = ai.aiPlay(this.board);

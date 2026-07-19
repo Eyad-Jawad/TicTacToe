@@ -1,4 +1,9 @@
 # TicTacToe Game
+
+License: MIT  
+Author: Eyad Jawad  
+
+
 This is a game that has an Ai as an oponent agaisnt you!  
 It is implmeneted with basic JavaScript, I used the Pyhton code as a base to make it    
 
